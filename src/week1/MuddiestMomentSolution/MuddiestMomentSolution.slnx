@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="AppHost/AppHost.csproj" />
+  <Project Path="Gateway.Api/Gateway.Api.csproj" />
   <Project Path="MuddiestMoment.Api/MuddiestMoment.Api.csproj" />
 </Solution>
