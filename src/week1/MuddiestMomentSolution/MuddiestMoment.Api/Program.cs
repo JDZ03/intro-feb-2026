@@ -1,3 +1,5 @@
+using MuddiestMoment.Api.Student;
+
 var builder = WebApplication.CreateBuilder(args);
 // configure this application to use the settings that are shared across all APIs in this solution 
 builder.AddServiceDefaults();
@@ -6,39 +8,17 @@ builder.AddServiceDefaults();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
+builder.Services.AddValidation(); // opting in to services to handle some stuff for you
+// above this is configuration of services (things that own some state and the process around it) that we need in our 
+// application
 var app = builder.Build();
+// everything here is setting up how we actually handle incoming request and write responses.
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// add the code I am about to write that allows us to handle POST to /student/moments
+app.MapStudentEndpoints();
 
 app.MapDefaultEndpoints(); // the health cehcks and all that.
-app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+// the api us not up and running (listening for requests until we hit the next line)
+app.Run(); // "blocking loop"
