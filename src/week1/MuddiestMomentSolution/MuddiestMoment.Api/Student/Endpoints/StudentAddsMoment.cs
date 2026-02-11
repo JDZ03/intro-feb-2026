@@ -1,18 +1,13 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Marten;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System.Reflection;
 namespace MuddiestMoment.Api.Student.Endpoints;
 
 public static class StudentAddsMoment
 {
-    public static async Task<Ok<StudentMomentResponseModel>> AddMoment(StudentMomentCreateModel request)
+    public static async Task<Ok<StudentMomentResponseModel>> AddMoment(StudentMomentCreateModel request, IDocumentSession session)
     {
 
-        // Get the data sent from the user
-        // Make sure they are authenticated
-        // We need to validate it 
-        // Add that to the db
-        // Send a receipt back 
-        // this will return an empty 200 Ok status code to the app that called this
         var response = new StudentMomentResponseModel
         {
             Id = Guid.NewGuid(),
@@ -23,6 +18,19 @@ public static class StudentAddsMoment
         };
         // Add it to databse and make sure it saves.
         // tomorrow morning, two liens here will save that in the databse. 
+        var entity = new StudentMomentEntity
+        {
+            // mapping
+            Id = response.Id,
+            Title = response.Title,
+            Description = response.Description,
+            AddedBy = response.AddedBy,
+            CreatedOn = response.CreatedOn
+        };
+
+        // will vary depending on what library/database you are using
+        session.Store(entity);
+        await session.SaveChangesAsync();
         
         return TypedResults.Ok(response);
     }

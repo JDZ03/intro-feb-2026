@@ -1,6 +1,14 @@
+using Marten;
 using MuddiestMoment.Api.Student;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("db-mm") ?? throw new Exception("No Connection String");
+builder.Services.AddMarten(config =>
+{
+    config.Connection(connectionString);
+}).UseLightweightSessions();
+
 // configure this application to use the settings that are shared across all APIs in this solution 
 builder.AddServiceDefaults();
 
