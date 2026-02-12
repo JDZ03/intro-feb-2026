@@ -9,7 +9,7 @@ public class Calculator
                  .Split([',', '\n', numbers[2]])
                  .Select(int.Parse)
                  .Sum()
-            : numbers.Split([ ',', '\n' ])
+            : numbers.Split([',', '\n'])
                  .Select(int.Parse)
                  .Sum();
     }
