@@ -1,35 +1,41 @@
-﻿
-namespace Banking.Domain;
+﻿namespace Banking.Domain;
 
-public class Account
+public class Account(ICalculateBonusesForAccounts _bonusCalculator)
 {
     private decimal _currentBalance = 5000M;
-    public void Deposit(decimal amountToDeposit)
+
+
+    public virtual void Deposit(TransactionAmount amountToDeposit)
     {
-        if (IsAllowedTransactionAmount(amountToDeposit))
-        {
-            _currentBalance += amountToDeposit; 
-        }
+        _currentBalance += amountToDeposit + _bonusCalculator.CalculateBonusForDeposit(_currentBalance, amountToDeposit);
     }
 
     public decimal GetBalance()
     {
-        return _currentBalance; 
+
+        return _currentBalance;
     }
 
-    public void Withdraw(decimal amountToWithdraw)
+    // Primitive Obsession 
+    public void Withdraw(TransactionAmount amountToWithdraw)
     {
-        if (IsAllowedTransactionAmount(amountToWithdraw))
+        if (WouldCauseOverdraft(amountToWithdraw))
         {
-            if (amountToWithdraw <= _currentBalance)
-            {
-                _currentBalance -= amountToWithdraw;
-            }
+            throw new InvalidTransactionAmountException();
         }
+        _currentBalance -= amountToWithdraw;
     }
 
-    private bool IsAllowedTransactionAmount(decimal amountToWithdraw)
+    private bool WouldCauseOverdraft(decimal amountToWithdraw)
     {
-        return amountToWithdraw > 0M;
+        return amountToWithdraw > _currentBalance;
     }
+
+    public class OverdraftNotAllowedException : ArgumentOutOfRangeException { }
+
+}
+
+public interface ICalculateBonusesForAccounts
+{
+    decimal CalculateBonusForDeposit(decimal currentBalance, decimal depositAmount);
 }

@@ -1,5 +1,6 @@
 ﻿using Banking.Domain;
-
+using Banking.Tests.TestDoubles;
+using NSubstitute;
 namespace Banking.Tests.NewAccounts;
 
 public class HaveCorrectBalance
@@ -8,7 +9,7 @@ public class HaveCorrectBalance
     public void BalanceIsCorrect()
     {
         // WTCYWYH - Write the code you wish you had.
-        var myAccount = new Account();
+        var myAccount = new Account(Substitute.For<ICalculateBonusesForAccounts>());
 
         decimal openingBalance = myAccount.GetBalance();
 
