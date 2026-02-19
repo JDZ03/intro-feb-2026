@@ -16,6 +16,7 @@ import { CounterStore } from './counter-store';
     <div class="flex flex-row gap-4 mt-4">
       <a class="btn btn-neutral" routerLink="dashboard">Home</a>
       <a class="btn btn-neutral" routerLink="signals">Signals</a>
+      <a class="btn btn-neutral" routerLink="resources">Resources Demo</a>
     </div>
     @if (store.fizzBuzz() !== 'nada') {
       <div class="alert alert-success">
