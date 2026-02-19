@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Qa.Api.Questions;
 
+// enables "auto validation" of incoming request bodies.
+// must be there to get the OpenApi stuff generated.
 [ApiController]
 public class QuestionController(IDocumentSession session) : ControllerBase
 {
@@ -34,22 +36,22 @@ public class QuestionController(IDocumentSession session) : ControllerBase
 }
 
 public record QuestionListItem
-    {
-        public Guid Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Content { get; set; } = string.Empty;
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
 
-        public List<SubmittedAnswer>? SubmittedAnswers { get; set; }
-    }
+    public List<SubmittedAnswer>? SubmittedAnswers { get; set; }
+}
 
-    public record SubmittedAnswer
-    {
-        public Guid Id { get; set; }
-        public string Content { get; set; } = string.Empty;
-    }
+public record SubmittedAnswer
+{
+    public Guid Id { get; set; }
+    public string Content { get; set; } = string.Empty;
+}
 
-    public record QuestionSubmissionItem
-    {
-        [MinLength(5), MaxLength(100)] public required string Title { get; set; } = string.Empty;
-        [MinLength(10), MaxLength(1000)] public required string Content { get; set; } = string.Empty;
-    }
+public record QuestionSubmissionItem
+{
+    [MinLength(5), MaxLength(100)] public required string Title { get; set; } = string.Empty;
+    [MinLength(10), MaxLength(1000)] public required string Content { get; set; } = string.Empty;
+}
