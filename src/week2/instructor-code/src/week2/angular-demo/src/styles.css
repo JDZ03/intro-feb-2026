@@ -7,3 +7,10 @@
     nord --default,
     dim --prefersdark;
 }
+
+label:has(+ input[required]) .label-text::after,
+label:has(+ select[required]) .label-text::after,
+label:has(+ textarea[required]) .label-text::after {
+  content: ' *';
+  @apply text-error;
+}

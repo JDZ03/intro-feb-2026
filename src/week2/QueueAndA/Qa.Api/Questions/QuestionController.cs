@@ -11,9 +11,13 @@ public class QuestionController(IDocumentSession session) : ControllerBase
 {
     // /questions
     [HttpGet("/questions")]
+   
     public async Task<ActionResult<IList<QuestionListItem>>> GetAllQuestions()
     {
+
+        // DO NOT EVER NEVER EVER DO THIS THIS IS A DEMO
         var questions = await session.Query<QuestionListItem>().ToListAsync();
+        await Task.Delay(3000); // wait three seconds before sending this response.
 
         return Ok(questions); // for right now
     }
@@ -21,6 +25,7 @@ public class QuestionController(IDocumentSession session) : ControllerBase
     [HttpPost("/questions")]
     public async Task<ActionResult> SubmitQuestion(QuestionSubmissionItem question)
     {
+
         var newQuestion = new QuestionListItem
         {
             Id = Guid.NewGuid(),
@@ -36,22 +41,23 @@ public class QuestionController(IDocumentSession session) : ControllerBase
 }
 
 public record QuestionListItem
-{
-    public Guid Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
+    {
+        public Guid Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
-    public List<SubmittedAnswer>? SubmittedAnswers { get; set; }
-}
+        public List<SubmittedAnswer>? SubmittedAnswers { get; set; }
+    }
 
-public record SubmittedAnswer
-{
-    public Guid Id { get; set; }
-    public string Content { get; set; } = string.Empty;
-}
+    public record SubmittedAnswer
+    {
+        public Guid Id { get; set; }
+        public string Content { get; set; } = string.Empty;
 
-public record QuestionSubmissionItem
-{
-    [MinLength(5), MaxLength(100)] public required string Title { get; set; } = string.Empty;
-    [MinLength(10), MaxLength(1000)] public required string Content { get; set; } = string.Empty;
-}
+    }
+
+    public record QuestionSubmissionItem
+    {
+        [MinLength(3), MaxLength(50)] public required string Title { get; set; } = string.Empty;
+        [MinLength(10), MaxLength(1000)] public required string Content { get; set; } = string.Empty;
+    }

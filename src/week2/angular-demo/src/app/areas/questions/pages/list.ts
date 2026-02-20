@@ -1,17 +1,18 @@
 import { httpResource } from '@angular/common/http';
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { QuestionListItem } from '../types';
+import { QuestionStore } from '../question-store';
 
 @Component({
   selector: 'app-questions-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
-    @if (listResource.isLoading()) {
+    @if (store.questionResource.isLoading()) {
       <span class="loading loading-bars loading-xl"></span>
     } @else {
       <ul class="flex flex-col gap-4">
-        @for (q of listResource.value(); track q.id) {
+        @for (q of store.questionResource.value(); track q.id) {
           <li class="card bg-base-200 card-xl shadow-sm">
             <div class="card-body">
               <h2 class="card-title">{{ q.title }}</h2>
@@ -43,5 +44,6 @@ import { QuestionListItem } from '../types';
   styles: ``,
 })
 export class List {
-  listResource = httpResource<QuestionListItem[]>(() => '/api/questions');
+  // listResource = httpResource<QuestionListItem[]>(() => '/api/questions');
+  store = inject(QuestionStore);
 }
