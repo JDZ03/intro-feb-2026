@@ -16,7 +16,7 @@ import { QuestionStore } from '../question-store';
           <li class="card bg-base-200 card-xl shadow-sm">
             <div class="card-body">
               <h2 class="card-title">{{ q.title }}</h2>
-              <p>{{ q.content }}</p>
+              <p>{{ q.questionBody }}</p>
               <div class="justify-end card-actions">
                 <button class="btn btn-primary">I Have an Answer!</button>
               </div>
@@ -26,7 +26,7 @@ import { QuestionStore } from '../question-store';
                 @for (a of q.submittedAnswers; track a.id) {
                   <li class="card bg-base-100 card-lg shadow-sm p-4 m-8">
                     <p>
-                      {{ a.content }}
+                      {{ a.questionBody }}
                     </p>
                   </li>
                 }

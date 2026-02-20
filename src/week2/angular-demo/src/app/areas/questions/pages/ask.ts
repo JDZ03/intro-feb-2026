@@ -1,6 +1,18 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+
+import {
+  FormField,
+  form,
+  required,
+  minLength,
+  maxLength,
+  validateStandardSchema,
+  submit,
+} from '@angular/forms/signals';
+
+import { zQuestionSubmissionItem } from '../../shared/api/zod.gen';
+import { QuestionStore } from '../question-store';
 import { QuestionSubmissionItem } from '../types';
-import { FormField, form, required, minLength, maxLength } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-questions-ask',
@@ -9,46 +21,90 @@ import { FormField, form, required, minLength, maxLength } from '@angular/forms/
   template: `
     <form (submit)="handleSubmit($event)" novalidate>
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Title of the Question?</legend>
-        <input [formField]="form.title" type="text" class="input" placeholder="Type here" />
+        <legend class="fieldset-legend">What's your question?</legend>
+        <label class="label" for="title"><span class="label-text font-medium">Title</span> </label>
+        <input
+          [formField]="form.title"
+          type="text"
+          class="input input-bordered"
+          placeholder="Type here"
+          id="title"
+        />
+
         @if (form.title().invalid() && form.title().touched()) {
           <div class="alert alert-error">
-            <p>Problems</p>
+            @for (error of form.title().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
           </div>
         }
-        <p class="label">Short description</p>
+
+        <label class="label" for="content"
+          ><span class="label-text font-medium">Give us the deets</span>
+        </label>
+        <textarea
+          [formField]="form.questionBody"
+          class="textarea"
+          placeholder="Type here"
+          id="content"
+        ></textarea>
+        <p class="label">Description of your question</p>
+
+        @if (form.questionBody().invalid() && form.questionBody().touched()) {
+          <div class="alert alert-error">
+            @for (error of form.questionBody().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
       </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">Description</legend>
-        <textarea [formField]="form.content" class="textarea" placeholder="Type here"></textarea>
-        <p class="label">Bigger description of your question</p>
-      </fieldset>
-      <button type="submit" class="btn btn-primary">Submit Question</button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [attr.aria-disabled]="form().invalid() || form().submitting()"
+      >
+        Submit Question
+      </button>
     </form>
   `,
-  styles: ``,
+  styles: `
+    button[aria-disabled='true'] {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+  `,
 })
 export class Ask {
+  store = inject(QuestionStore);
   handleSubmit(event: SubmitEvent) {
     event.preventDefault();
-    console.log(this.model());
-    if (this.form().valid()) {
-      // send the form to the server
-    } else {
-      // show the errors and stuff.
-    }
+    submit(this.form, async (f) => {
+      const value = f().value();
+      await this.store.addQuestion(value);
+
+      f().reset();
+    });
   }
   model = signal<QuestionSubmissionItem>({
     title: '',
-    content: '',
+    questionBody: '',
+    priority: 0,
   });
 
-  form = form(this.model, (schemata) => {
-    required(schemata.title);
-    minLength(schemata.title, 5);
-    maxLength(schemata.title, 100);
-    required(schemata.content);
-    minLength(schemata.content, 10);
-    maxLength(schemata.content, 1000);
+  // form = form(this.model, (schemata) => {
+  //   required(schemata.title);
+  //   minLength(schemata.title, 5);
+  //   maxLength(schemata.title, 100);
+  //   required(schemata.content);
+  //   minLength(schemata.content, 10);
+  //   maxLength(schemata.content, 1000);
+  // });
+  form = form(this.model, (schema) => {
+    validateStandardSchema(schema, zQuestionSubmissionItem);
+    // see styles.css and the input[required]::after rule - weird, but schema is different than form validation.
+    // Jeff showed this, don't think he just "knew" how to do this. He didn't. This was about 6 hours of frustration.
+
+    required(schema.title);
+    required(schema.questionBody);
   });
 }

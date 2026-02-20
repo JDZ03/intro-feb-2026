@@ -18,6 +18,9 @@ import { QuestionStore } from './question-store';
       <a class="btn btn-neutral" [routerLinkActive]="['active']" [routerLink]="['ask']"
         >Ask A Question</a
       >
+      <a class="btn btn-neutral" [routerLinkActive]="['active']" [routerLink]="['list-2']"
+        >List2 of Open Questions</a
+      >
     </div>
 
     <router-outlet />

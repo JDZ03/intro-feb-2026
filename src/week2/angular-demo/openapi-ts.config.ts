@@ -8,12 +8,5 @@ export default defineConfig({
       postProcess: ['prettier', 'eslint'],
     },
   ],
-  plugins: [
-    'zod',
-    {
-      name: '@hey-api/client-angular',
-      throwOnError: true,
-      bundle: false,
-    },
-  ],
+  plugins: ['zod'],
 });

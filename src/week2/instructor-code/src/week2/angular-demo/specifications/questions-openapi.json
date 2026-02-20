@@ -10,6 +10,27 @@
     }
   ],
   "paths": {
+    "/questions/{id}": {
+      "get": {
+        "tags": ["Question"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/questions": {
       "get": {
         "tags": ["Question"],
@@ -78,6 +99,7 @@
   "components": {
     "schemas": {
       "QuestionListItem": {
+        "required": ["id", "questionBody"],
         "type": "object",
         "properties": {
           "id": {
@@ -85,9 +107,13 @@
             "format": "uuid"
           },
           "title": {
+            "maxLength": 100,
+            "minLength": 5,
             "type": "string"
           },
-          "content": {
+          "questionBody": {
+            "maxLength": 500,
+            "minLength": 30,
             "type": "string"
           },
           "submittedAnswers": {
@@ -99,7 +125,7 @@
         }
       },
       "QuestionSubmissionItem": {
-        "required": ["title", "content", "priority"],
+        "required": ["title", "questionBody", "priority"],
         "type": "object",
         "properties": {
           "title": {
@@ -107,7 +133,7 @@
             "minLength": 5,
             "type": "string"
           },
-          "content": {
+          "questionBody": {
             "maxLength": 500,
             "minLength": 30,
             "type": "string"
@@ -126,7 +152,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "content": {
+          "questionBody": {
             "type": "string"
           }
         }
