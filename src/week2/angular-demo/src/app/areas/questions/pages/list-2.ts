@@ -12,7 +12,7 @@ import { AltQuestionStore } from '../alt-question-store';
         <li class="card bg-base-200 card-xl shadow-sm">
           <div class="card-body">
             <h2 class="card-title">{{ q.title }}</h2>
-            <p>CONTENT HERE: {{ q.questionBody }}</p>
+            <p>CONTENT HERE: {{ q.question }}</p>
             <div class="justify-end card-actions">
               <button class="btn btn-primary">I Have an Answer!</button>
             </div>
