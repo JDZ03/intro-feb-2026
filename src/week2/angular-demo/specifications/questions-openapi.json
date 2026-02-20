@@ -99,7 +99,7 @@
   "components": {
     "schemas": {
       "QuestionListItem": {
-        "required": ["id", "questionBody"],
+        "required": ["id", "question"],
         "type": "object",
         "properties": {
           "id": {
@@ -111,7 +111,7 @@
             "minLength": 5,
             "type": "string"
           },
-          "questionBody": {
+          "question": {
             "maxLength": 500,
             "minLength": 30,
             "type": "string"
@@ -125,7 +125,7 @@
         }
       },
       "QuestionSubmissionItem": {
-        "required": ["title", "questionBody", "priority"],
+        "required": ["title", "question", "priority"],
         "type": "object",
         "properties": {
           "title": {
@@ -133,7 +133,7 @@
             "minLength": 5,
             "type": "string"
           },
-          "questionBody": {
+          "question": {
             "maxLength": 500,
             "minLength": 30,
             "type": "string"
@@ -152,7 +152,7 @@
             "type": "string",
             "format": "uuid"
           },
-          "questionBody": {
+          "question": {
             "type": "string"
           }
         }

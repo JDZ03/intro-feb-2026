@@ -43,16 +43,16 @@ import { QuestionSubmissionItem } from '../types';
           ><span class="label-text font-medium">Give us the deets</span>
         </label>
         <textarea
-          [formField]="form.questionBody"
+          [formField]="form.question"
           class="textarea"
           placeholder="Type here"
           id="content"
         ></textarea>
         <p class="label">Description of your question</p>
 
-        @if (form.questionBody().invalid() && form.questionBody().touched()) {
+        @if (form.question().invalid() && form.question().touched()) {
           <div class="alert alert-error">
-            @for (error of form.questionBody().errors(); track error) {
+            @for (error of form.question().errors(); track error) {
               <p>{{ error.message }}</p>
             }
           </div>
@@ -87,7 +87,7 @@ export class Ask {
   }
   model = signal<QuestionSubmissionItem>({
     title: '',
-    questionBody: '',
+    question: '',
     priority: 0,
   });
 
@@ -105,6 +105,6 @@ export class Ask {
     // Jeff showed this, don't think he just "knew" how to do this. He didn't. This was about 6 hours of frustration.
 
     required(schema.title);
-    required(schema.questionBody);
+    required(schema.question);
   });
 }

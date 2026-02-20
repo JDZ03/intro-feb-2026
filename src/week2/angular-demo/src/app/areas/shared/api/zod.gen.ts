@@ -4,7 +4,7 @@ import * as z from 'zod';
 
 export const zQuestionSubmissionItem = z.object({
     title: z.string().min(5).max(50),
-    questionBody: z.string().min(30).max(500),
+    question: z.string().min(30).max(500),
     priority: z.union([
         z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
         z.string().regex(/^-?(?:0|[1-9]\d*)$/)
@@ -13,13 +13,13 @@ export const zQuestionSubmissionItem = z.object({
 
 export const zSubmittedAnswer = z.object({
     id: z.optional(z.uuid()),
-    questionBody: z.optional(z.string())
+    question: z.optional(z.string())
 });
 
 export const zQuestionListItem = z.object({
     id: z.uuid(),
     title: z.optional(z.string().min(5).max(100)),
-    questionBody: z.string().min(30).max(500),
+    question: z.string().min(30).max(500),
     submittedAnswers: z.optional(z.union([
         z.null(),
         z.array(zSubmittedAnswer)

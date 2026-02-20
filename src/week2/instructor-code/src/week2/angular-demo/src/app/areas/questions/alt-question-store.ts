@@ -19,13 +19,15 @@ export const AltQuestionStore = signalStore(
   withMethods((store) => {
     return {
       _load: async () => {
-        const data = await fetch('/api/questions') // late bound call.
-          .then((res) => res.json())
-          .then((data) => zGetQuestionsResponse.parse(data)) // if you really don't trust apis, or if failure is not an option, VALIDATE the data.
-          .catch(() => console.error('Failed to load questions'));
-        // .then((data) => data as QuestionListItem[]);
-
-        patchState(store, setEntities(data || []));
+        try {
+          const data = await fetch('/api/questions') // late bound call.
+            .then((res) => res.json())
+            .then((data) => zGetQuestionsResponse.parse(data)); // if you really don't trust apis, or if failure is not an option, VALIDATE the data.
+          patchState(store, setEntities(data || []));
+        } catch (ex) {
+          // webService.notify(this thing is broke!)
+          console.error('Could not validate the API data! What should we do?', ex);
+        }
       },
     };
   }),
